@@ -1,0 +1,136 @@
+{
+  "topics": [
+    {
+      "id": "t1",
+      "slug": "local-first-systems",
+      "name": "Local-first systems",
+      "description": "Sync, ownership, CRDTs, and application architecture for resilient personal software.",
+      "createdAt": "2026-05-20T10:15:00.000Z"
+    },
+    {
+      "id": "t2",
+      "slug": "developer-tools",
+      "name": "Developer tools",
+      "description": "CLI design, observability, automation, and workflows that reduce friction.",
+      "createdAt": "2026-05-23T16:40:00.000Z"
+    },
+    {
+      "id": "t3",
+      "slug": "cognitive-systems",
+      "name": "Cognitive systems",
+      "description": "Notes on attention, memory, human-computer interaction, and knowledge work.",
+      "createdAt": "2026-06-01T09:00:00.000Z"
+    },
+    {
+      "id": "t4",
+      "slug": "distributed-databases",
+      "name": "Distributed databases",
+      "description": "Consensus, storage engines, replication, and practical tradeoffs.",
+      "createdAt": "2026-06-05T14:20:00.000Z"
+    },
+    {
+      "id": "t5",
+      "slug": "reading-list",
+      "name": "Reading list",
+      "description": "Books and long-form resources worth revisiting when there is time.",
+      "createdAt": "2026-06-10T18:00:00.000Z"
+    },
+    {
+      "id": "t6",
+      "slug": "interface-patterns",
+      "name": "Interface patterns",
+      "description": "UI references, visual systems, and interaction details for private tools.",
+      "createdAt": "2026-06-13T12:05:00.000Z"
+    }
+  ],
+  "resources": [
+    {
+      "id": "r1",
+      "topicId": "t1",
+      "title": "Local-first software: You own your data, in spite of the cloud",
+      "type": "paper",
+      "url": "https://www.inkandswitch.com/local-first/",
+      "note": "Foundational framing for ownership, sync, and collaboration without making cloud services the source of truth.",
+      "preview": "Ink & Switch research essay on local-first principles.",
+      "createdAt": "2026-06-17T09:35:00.000Z",
+      "updatedAt": "2026-06-17T09:35:00.000Z"
+    },
+    {
+      "id": "r2",
+      "topicId": "t2",
+      "title": "Charmbracelet Bubble Tea",
+      "type": "repo",
+      "url": "https://github.com/charmbracelet/bubbletea",
+      "note": "Good reference for composable terminal UI ergonomics and command loops.",
+      "preview": "A powerful little TUI framework for Go.",
+      "createdAt": "2026-06-16T21:10:00.000Z",
+      "updatedAt": "2026-06-16T21:10:00.000Z"
+    },
+    {
+      "id": "r3",
+      "topicId": "t3",
+      "title": "The Extended Mind",
+      "type": "book",
+      "url": "",
+      "note": "Relevant to the app's purpose: offloading memory and arranging external systems for thought.",
+      "preview": "Annie Murphy Paul on thinking outside the brain.",
+      "createdAt": "2026-06-16T08:45:00.000Z",
+      "updatedAt": "2026-06-16T08:45:00.000Z"
+    },
+    {
+      "id": "r4",
+      "topicId": "t4",
+      "title": "Raft paper notes",
+      "type": "note",
+      "url": "",
+      "note": "Summarize leader election mechanics and what makes Raft easier to explain than Paxos.",
+      "preview": "Plain note for consensus review.",
+      "createdAt": "2026-06-15T17:25:00.000Z",
+      "updatedAt": "2026-06-15T17:25:00.000Z"
+    },
+    {
+      "id": "r5",
+      "topicId": "t6",
+      "title": "GitHub command palette and create menu",
+      "type": "url",
+      "url": "https://github.com",
+      "note": "Header pattern to borrow: dense utility without turning every action into a top-level button.",
+      "preview": "Navigation reference for compact private app chrome.",
+      "createdAt": "2026-06-14T19:10:00.000Z",
+      "updatedAt": "2026-06-14T19:10:00.000Z"
+    },
+    {
+      "id": "r6",
+      "topicId": "t5",
+      "title": "Designing Data-Intensive Applications",
+      "type": "book",
+      "url": "",
+      "note": "Re-read chapters on replication and partitioning before making persistence choices.",
+      "preview": "Martin Kleppmann's systems book.",
+      "createdAt": "2026-06-12T13:30:00.000Z",
+      "updatedAt": "2026-06-12T13:30:00.000Z"
+    },
+    {
+      "id": "r7",
+      "topicId": "t1",
+      "title": "Automerge docs",
+      "type": "url",
+      "url": "https://automerge.org/",
+      "note": "Potential model for future offline capture and sync if this becomes more than a Vercel app.",
+      "preview": "CRDT library documentation and examples.",
+      "createdAt": "2026-06-11T11:20:00.000Z",
+      "updatedAt": "2026-06-11T11:20:00.000Z"
+    },
+    {
+      "id": "r8",
+      "topicId": "t2",
+      "title": "OpenTelemetry collector",
+      "type": "repo",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector",
+      "note": "Study configuration shape and extension points for plugin-driven tools.",
+      "preview": "Vendor-agnostic telemetry collector.",
+      "createdAt": "2026-06-09T07:55:00.000Z",
+      "updatedAt": "2026-06-09T07:55:00.000Z"
+    }
+  ]
+}
