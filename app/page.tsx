@@ -11,15 +11,17 @@ export default function HomePage() {
   return (
     <AppShell>
       <div className="space-y-8">
-        <SectionHeading
-          eyebrow="Private library"
-          title="Capture loose threads before they disappear."
-          description="A mockup for collecting notes, URLs, repositories, papers, and books under topics you are actively thinking about."
-        />
+        {/* <SectionHeading */}
+        {/*   eyebrow="Private library" */}
+        {/*   title="Capture loose threads before they disappear." */}
+        {/*   description="A mockup for collecting notes, URLs, repositories, papers, and books under topics you are actively thinking about." */}
+        {/* /> */}
+
+        {/* possibly add a github contribution style heatmap here */}
 
         <section className="grid gap-4 sm:grid-cols-3">
-          <StatCard label="Topics" value={String(recentTopics.length + 1)} />
-          <StatCard label="Resources" value={String(getResourcesWithTopics().length)} />
+          <StatCard label="topics" value={String(recentTopics.length + 1)} />
+          <StatCard label="resources" value={String(getResourcesWithTopics().length)} />
           <StatCard label="Latest add" value={formatDate(recentResources[0]?.createdAt ?? null)} />
         </section>
 

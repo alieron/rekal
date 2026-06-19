@@ -38,7 +38,7 @@ export function LoginForm() {
       <label className="block text-sm font-medium text-text" htmlFor="password">
         Password
       </label>
-      <div className="flex items-center gap-3  border border-line bg-page px-4 py-3 focus-within:border-accent">
+      <div className="flex items-center gap-3 border border-line bg-page px-4 py-3 focus-within:border-accent">
         <LockKeyhole className="size-4 text-faint" />
         <input
           autoFocus
@@ -52,7 +52,7 @@ export function LoginForm() {
       </div>
       {error ? <p className="text-sm text-danger">{error}</p> : null}
       <button
-        className="w-full  bg-text px-4 py-3 text-sm font-semibold text-page transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full bg-text px-4 py-3 text-sm font-semibold text-page transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
         disabled={isSubmitting || !password}
         type="submit"
       >
