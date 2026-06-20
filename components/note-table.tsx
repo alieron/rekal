@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableWrap, Td, Th } from "@/components/ui/table";
 import { Tag } from "@/components/ui/tag";
 import { shortDate, topics, type NoteWithTopic } from "@/lib/data";
-import { parseNoteResource } from "@/lib/note-resource";
+import { getNoteTypeTitle, parseNoteType } from "@/lib/note-types/registry";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,10 +20,11 @@ export function NoteTable({ notes }: { notes: NoteWithTopic[] }) {
             <thead className="border-b border-line bg-panel-soft"><tr><Th>Note</Th><Th>Topic</Th><Th>Type</Th><Th>Edited</Th><Th /></tr></thead>
             <tbody className="divide-y divide-line">
               {notes.map((note) => {
-                const parsed = parseNoteResource(note);
+                const parsed = parseNoteType(note);
+                const title = getNoteTypeTitle(note, parsed);
                 return (
                   <tr className="hover:bg-panel-soft/70" key={note.id}>
-                    <Td><Link className="font-medium text-text hover:text-accent" href={`/topics/${note.topic.slug}?note=${note.id}`}>{parsed.title}</Link><p className="mt-1 max-w-xl truncate text-muted">{note.note}</p></Td>
+                    <Td><Link className="font-medium text-text hover:text-accent" href={`/topics/${note.topic.slug}?note=${note.id}`}>{title}</Link><p className="mt-1 max-w-xl truncate text-muted">{note.note}</p></Td>
                     <Td><Link href={`/topics/${note.topic.slug}`}><Tag>{note.topic.name}</Tag></Link></Td>
                     <Td className="text-muted">{parsed.label}</Td>
                     <Td className="text-muted">{shortDate(note.updatedAt)}</Td>

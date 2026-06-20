@@ -5,7 +5,7 @@ import { CreateMenu } from "@/components/create-menu";
 import { inputClassName } from "@/components/ui/dialog";
 import { Tag } from "@/components/ui/tag";
 import { notes, topics } from "@/lib/data";
-import { parseNoteResource } from "@/lib/note-resource";
+import { getNoteTypeTitle, parseNoteType } from "@/lib/note-types/registry";
 import { Home, Library, LogOut, Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -207,8 +207,9 @@ function useSearchResults(query: string) {
     const topicResults = topics.map((topic) => ({ href: `/topics/${topic.slug}`, label: topic.name, meta: "topic", haystack: `${topic.name} ${topic.description}`.toLowerCase() }));
     const noteResults = notes.map((note) => {
       const topic = topics.find((item) => item.id === note.topicId) ?? topics[0];
-      const parsed = parseNoteResource(note);
-      return { href: `/topics/${topic.slug}?note=${note.id}`, label: parsed.title, meta: parsed.label, haystack: `${note.note} ${note.resource ?? ""} ${parsed.title}`.toLowerCase() };
+      const parsed = parseNoteType(note);
+      const title = getNoteTypeTitle(note, parsed);
+      return { href: `/topics/${topic.slug}?note=${note.id}`, label: title, meta: parsed.label, haystack: `${note.note} ${note.resource ?? ""} ${title}`.toLowerCase() };
     });
     return [...topicResults, ...noteResults].filter((item) => fuzzyMatch(item.haystack, normalized)).slice(0, 8);
   }, [query]);

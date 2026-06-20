@@ -8,12 +8,12 @@ export function Heatmap({ values, startDate, endDate, colors = ["#1d1d1d", "#3f2
   const max = Math.max(1, ...values.map((value) => value.count));
 
   return (
-    <div className="overflow-x-auto pb-1">
+    <div className="w-full min-w-0 border border-line p-3">
       <div className="grid w-max grid-flow-col grid-rows-7 gap-1">
         {days.map((date) => {
           const count = valueMap.get(date) ?? 0;
           return (
-            <Tooltip content={`${count} additions or edits on ${date}`} key={date}>
+            <Tooltip content={`${count} edit${count == 1 ? '' : 's'} on ${date}`} key={date}>
               <span className="block size-3 border border-line" style={{ backgroundColor: colorFor(count, max, colors) }} />
             </Tooltip>
           );

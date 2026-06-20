@@ -22,7 +22,7 @@ export default async function TopicDetailPage({ params, searchParams }: { params
             <div className="mt-4 flex flex-wrap gap-2"><Tag tone="accent">{notes.length} notes</Tag><Tag>created {shortDate(topic.createdAt)}</Tag><Tag>edited {shortDate(topic.updatedAt)}</Tag></div>
           </div>
         </header>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid items-start gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {notes.map((note) => (
             <NoteCard focused={focusedNoteId === note.id} key={note.id} note={note} />
           ))}

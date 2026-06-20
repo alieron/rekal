@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
         topicId: notes.topicId,
         note: notes.note,
         resource: notes.resource,
+        metadata: notes.metadata,
         createdAt: notes.createdAt,
         updatedAt: notes.updatedAt,
         topic: {
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
     topicId?: string;
     note?: string;
     resource?: string | null;
+    metadata?: Record<string, unknown>;
   };
   const note = body.note?.trim();
 
@@ -52,7 +54,7 @@ export async function POST(request: NextRequest) {
   try {
     const rows = await db()
       .insert(notes)
-      .values({ topicId: body.topicId, note, resource: body.resource?.trim() || null })
+      .values({ topicId: body.topicId, note, resource: body.resource?.trim() || null, metadata: body.metadata ?? {} })
       .returning();
 
     return NextResponse.json({ note: rows[0] }, { status: 201 });

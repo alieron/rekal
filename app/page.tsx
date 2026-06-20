@@ -19,13 +19,15 @@ export default function HomePage() {
     <AppShell>
       <div className="space-y-5">
         <header className="flex items-start justify-between gap-4">
-          <div><h1 className="text-xl font-semibold text-text">Home</h1><p className="mt-1 text-sm text-muted">{allNotes.length} notes · {topics.length} topics</p></div>
+          <p className="text-sm text-muted">{allNotes.length} note{allNotes.length == 1 ? '' : 's'} · {topics.length} topic{topics.length == 1 ? '' : 's'}</p>
         </header>
 
-        <Card>
-          <CardHeader><h2 className="text-sm font-semibold text-text">Activity</h2><span className="text-xs text-faint">additions and edits</span></CardHeader>
-          <CardContent><Heatmap endDate={end.toISOString().slice(0, 10)} startDate={start.toISOString().slice(0, 10)} values={activity} /></CardContent>
-        </Card>
+        <section className="space-y-3">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-sm font-semibold text-text">Activity</h2>
+          </div>
+          <Heatmap endDate={end.toISOString().slice(0, 10)} startDate={start.toISOString().slice(0, 10)} values={activity} />
+        </section>
 
         <section className="space-y-3">
           <div className="flex items-center justify-between gap-4">
@@ -35,11 +37,12 @@ export default function HomePage() {
           <NoteTable notes={recentNotes} />
         </section>
 
-        <Card>
+        <section className="space-y-3">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="p-4 text-sm font-semibold text-text">Topics</h2>
+            <h2 className="text-sm font-semibold text-text">Topics</h2>
+            <Link className="text-sm text-muted hover:text-accent" href="/topics">View all</Link>
           </div>
-          <div className="grid gap-3 p-4 pt-0 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid w-full gap-3 pt-0 md:grid-cols-2 xl:grid-cols-3">
             {topicStats.map((topic) => (
               <Link className="border border-line bg-page p-4 transition hover:border-line-strong hover:bg-panel-soft" href={`/topics/${topic.slug}`} key={topic.id}>
                 <Tag tone="accent">{topic.noteCount} notes</Tag>
@@ -49,7 +52,7 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-        </Card>
+        </section>
       </div>
     </AppShell>
   );

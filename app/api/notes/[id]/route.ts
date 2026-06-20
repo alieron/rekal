@@ -16,6 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         topicId: notes.topicId,
         note: notes.note,
         resource: notes.resource,
+        metadata: notes.metadata,
         createdAt: notes.createdAt,
         updatedAt: notes.updatedAt,
         topic: {
@@ -46,12 +47,14 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     topicId?: string;
     note?: string;
     resource?: string | null;
+    metadata?: Record<string, unknown>;
   };
 
   const updates: Partial<typeof notes.$inferInsert> = { updatedAt: new Date() };
   if (body.topicId !== undefined) updates.topicId = body.topicId;
   if (body.note !== undefined) updates.note = body.note.trim();
   if (body.resource !== undefined) updates.resource = body.resource?.trim() || null;
+  if (body.metadata !== undefined) updates.metadata = body.metadata;
 
   try {
     const rows = await db().update(notes).set(updates).where(eq(notes.id, id)).returning();
