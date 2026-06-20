@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { CreateMenu } from "@/components/create-menu";
 import { inputClassName } from "@/components/ui/dialog";
 import { Tag } from "@/components/ui/tag";
-import { notes, topics } from "@/lib/data";
+import type { NoteWithTopic, Topic } from "@/lib/data";
 import { getNoteTypeTitle, parseNoteType } from "@/lib/note-types/registry";
 import { Home, Library, LogOut, Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, topics, notes }: { children: React.ReactNode; topics: Topic[]; notes: NoteWithTopic[] }) {
   const pathname = usePathname();
   const currentTopic = topics.find((topic) => pathname === `/topics/${topic.slug}`);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,19 +19,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[220px_1fr]">
-      <MobileHeader currentTopicId={currentTopic?.id} onMenu={() => setSidebarOpen(true)} onSearch={() => setSearchOpen(true)} topicOnly={Boolean(currentTopic)} />
-      <aside className="hidden border-r border-line bg-panel/60 lg:block"><Sidebar /></aside>
-      {sidebarOpen ? <div className="fixed inset-0 z-50 bg-black/70 lg:hidden" onClick={() => setSidebarOpen(false)}><div className="flex h-full w-72 flex-col border-r border-line bg-page" onClick={(event) => event.stopPropagation()}><div className="flex shrink-0 justify-end p-3"><Button onClick={() => setSidebarOpen(false)} size="icon" type="button" variant="ghost"><X className="size-4" /></Button></div><div className="min-h-0 flex-1"><Sidebar onNavigate={() => setSidebarOpen(false)} showLogout /></div></div></div> : null}
+      <MobileHeader currentTopicId={currentTopic?.id} onMenu={() => setSidebarOpen(true)} onSearch={() => setSearchOpen(true)} topicOnly={Boolean(currentTopic)} topics={topics} />
+      <aside className="hidden border-r border-line bg-panel/60 lg:block"><Sidebar notes={notes} topics={topics} /></aside>
+      {sidebarOpen ? <div className="fixed inset-0 z-50 bg-black/70 lg:hidden" onClick={() => setSidebarOpen(false)}><div className="flex h-full w-72 flex-col border-r border-line bg-page" onClick={(event) => event.stopPropagation()}><div className="flex shrink-0 justify-end p-3"><Button onClick={() => setSidebarOpen(false)} size="icon" type="button" variant="ghost"><X className="size-4" /></Button></div><div className="min-h-0 flex-1"><Sidebar notes={notes} onNavigate={() => setSidebarOpen(false)} showLogout topics={topics} /></div></div></div> : null}
       <div className="min-w-0">
-        <DesktopHeader currentTopicId={currentTopic?.id} topicOnly={Boolean(currentTopic)} />
+        <DesktopHeader currentTopicId={currentTopic?.id} notes={notes} topicOnly={Boolean(currentTopic)} topics={topics} />
         <main className="w-full min-w-0 px-3 py-5 sm:px-6 lg:px-8 lg:py-8">{children}</main>
       </div>
-      <SearchOverlay onOpenChange={setSearchOpen} open={searchOpen} />
+      <SearchOverlay notes={notes} onOpenChange={setSearchOpen} open={searchOpen} topics={topics} />
     </div>
   );
 }
 
-function MobileHeader({ onMenu, onSearch, topicOnly, currentTopicId }: { onMenu: () => void; onSearch: () => void; topicOnly: boolean; currentTopicId?: string }) {
+function MobileHeader({ onMenu, onSearch, topicOnly, currentTopicId, topics }: { onMenu: () => void; onSearch: () => void; topicOnly: boolean; currentTopicId?: string; topics: Topic[] }) {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-page/90 px-3 py-3 backdrop-blur lg:hidden">
       <Button aria-label="Open navigation" onClick={onMenu} size="icon" type="button" variant="primary"><Menu className="size-5" /></Button>
@@ -43,7 +43,7 @@ function MobileHeader({ onMenu, onSearch, topicOnly, currentTopicId }: { onMenu:
   );
 }
 
-function DesktopHeader({ topicOnly, currentTopicId }: { topicOnly: boolean; currentTopicId?: string }) {
+function DesktopHeader({ topicOnly, currentTopicId, topics, notes }: { topicOnly: boolean; currentTopicId?: string; topics: Topic[]; notes: NoteWithTopic[] }) {
   const router = useRouter();
 
   async function logout() {
@@ -54,18 +54,18 @@ function DesktopHeader({ topicOnly, currentTopicId }: { topicOnly: boolean; curr
 
   return (
     <header className="sticky top-0 z-30 hidden items-center justify-end gap-3 border-b border-line bg-page/90 px-8 py-3 backdrop-blur lg:flex">
-      <DesktopSearch />
+      <DesktopSearch notes={notes} topics={topics} />
       <CreateMenu defaultTopicId={currentTopicId} topicOnly={topicOnly} topics={topics} />
       <Button aria-label="Logout" onClick={logout} size="icon" type="button" variant="primary"><LogOut className="size-4" /></Button>
     </header>
   );
 }
 
-function DesktopSearch() {
+function DesktopSearch({ topics, notes }: { topics: Topic[]; notes: NoteWithTopic[] }) {
   const router = useRouter();
   const rootRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
-  const results = useSearchResults(query);
+  const results = useSearchResults(query, topics, notes);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => setActiveIndex(0), [query]);
@@ -113,7 +113,7 @@ function DesktopSearch() {
   );
 }
 
-function Sidebar({ onNavigate, showLogout = false }: { onNavigate?: () => void; showLogout?: boolean }) {
+function Sidebar({ onNavigate, showLogout = false, topics, notes }: { onNavigate?: () => void; showLogout?: boolean; topics: Topic[]; notes: NoteWithTopic[] }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -149,10 +149,10 @@ function NavLink({ href, label, active, icon, meta, onNavigate }: { href: string
   );
 }
 
-function SearchOverlay({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+function SearchOverlay({ open, onOpenChange, topics, notes }: { open: boolean; onOpenChange: (open: boolean) => void; topics: Topic[]; notes: NoteWithTopic[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const results = useSearchResults(query);
+  const results = useSearchResults(query, topics, notes);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => setActiveIndex(0), [query]);
@@ -200,7 +200,7 @@ function SearchOverlay({ open, onOpenChange }: { open: boolean; onOpenChange: (o
   );
 }
 
-function useSearchResults(query: string) {
+function useSearchResults(query: string, topics: Topic[], notes: NoteWithTopic[]) {
   return useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return [];
@@ -212,7 +212,7 @@ function useSearchResults(query: string) {
       return { href: `/topics/${topic.slug}?note=${note.id}`, label: title, meta: parsed.label, haystack: `${note.note} ${note.resource ?? ""} ${title}`.toLowerCase() };
     });
     return [...topicResults, ...noteResults].filter((item) => fuzzyMatch(item.haystack, normalized)).slice(0, 8);
-  }, [query]);
+  }, [query, topics, notes]);
 }
 
 function SearchResults({ results, onSelect, activeIndex, className = "absolute left-0 right-0 top-12 z-40", showEmpty = true }: { results: Array<{ href: string; label: string; meta: string }>; onSelect: () => void; activeIndex: number; className?: string; showEmpty?: boolean }) {

@@ -1,22 +1,22 @@
 import { AppShell } from "@/components/app-shell";
 import { NoteTable } from "@/components/note-table";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Heatmap } from "@/components/ui/heatmap";
 import { Tag } from "@/components/ui/tag";
-import { getActivityByDay, getNotesWithTopics, getTopicsWithStats, shortDate, topics } from "@/lib/data";
+import { getActivityByDay, getNotesWithTopics, getTopics, getTopicsWithStats, shortDate } from "@/lib/data";
 import Link from "next/link";
 
-export default function HomePage() {
-  const allNotes = getNotesWithTopics();
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [allNotes, topics, topicStats, activityByDay] = await Promise.all([getNotesWithTopics(), getTopics(), getTopicsWithStats(), getActivityByDay()]);
   const recentNotes = allNotes.slice(0, 7);
-  const topicStats = getTopicsWithStats();
-  const activity = Array.from(getActivityByDay(), ([date, count]) => ({ date, count }));
+  const activity = Array.from(activityByDay, ([date, count]) => ({ date, count }));
   const end = new Date();
   const start = new Date();
   start.setDate(end.getDate() - 120);
 
   return (
-    <AppShell>
+    <AppShell notes={allNotes} topics={topics}>
       <div className="space-y-5">
         <header className="flex items-start justify-between gap-4">
           <p className="text-sm text-muted">{allNotes.length} note{allNotes.length == 1 ? '' : 's'} · {topics.length} topic{topics.length == 1 ? '' : 's'}</p>
@@ -34,7 +34,7 @@ export default function HomePage() {
             <h2 className="text-sm font-semibold text-text">Recent additions</h2>
             <Link className="text-sm text-muted hover:text-accent" href="/notes">View all</Link>
           </div>
-          <NoteTable notes={recentNotes} />
+          <NoteTable notes={recentNotes} topics={topics} />
         </section>
 
         <section className="space-y-3">

@@ -4,13 +4,13 @@ import { NoteDialog } from "@/components/note-dialog";
 import { Button } from "@/components/ui/button";
 import { Table, TableWrap, Td, Th } from "@/components/ui/table";
 import { Tag } from "@/components/ui/tag";
-import { shortDate, topics, type NoteWithTopic } from "@/lib/data";
+import { shortDate, type NoteWithTopic, type Topic } from "@/lib/data";
 import { getNoteTypeTitle, parseNoteType } from "@/lib/note-types/registry";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export function NoteTable({ notes }: { notes: NoteWithTopic[] }) {
+export function NoteTable({ notes, topics }: { notes: NoteWithTopic[]; topics: Topic[] }) {
   const [editing, setEditing] = useState<NoteWithTopic | undefined>();
   return (
     <>

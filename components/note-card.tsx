@@ -3,13 +3,13 @@
 import { NoteDialog } from "@/components/note-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { topics, type NoteWithTopic } from "@/lib/data";
+import type { NoteWithTopic, Topic } from "@/lib/data";
 import { NoteTypeCard } from "@/lib/note-types/cards";
 import { parseNoteType } from "@/lib/note-types/registry";
 import { Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export function NoteCard({ note, focused = false }: { note: NoteWithTopic; focused?: boolean }) {
+export function NoteCard({ note, topics, focused = false }: { note: NoteWithTopic; topics: Topic[]; focused?: boolean }) {
   const parsed = parseNoteType(note);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

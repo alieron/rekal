@@ -1,16 +1,20 @@
 import { AppShell } from "@/components/app-shell";
 import { Card } from "@/components/ui/card";
 import { Tag } from "@/components/ui/tag";
-import { getTopicsWithStats, shortDate } from "@/lib/data";
+import { getNotesWithTopics, getTopics, getTopicsWithStats, shortDate } from "@/lib/data";
 import Link from "next/link";
 
-export default function TopicsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function TopicsPage() {
+  const [notes, topics, topicStats] = await Promise.all([getNotesWithTopics(), getTopics(), getTopicsWithStats()]);
+
   return (
-    <AppShell>
+    <AppShell notes={notes} topics={topics}>
       <div className="space-y-6">
         <header><h1 className="text-xl font-semibold text-text">Topics</h1><p className="mt-1 text-sm text-muted">Groups for the notes worth returning to.</p></header>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {getTopicsWithStats().map((topic) => (
+          {topicStats.map((topic) => (
             <Link href={`/topics/${topic.slug}`} key={topic.id}>
               <Card className="h-full p-4 transition hover:border-line-strong hover:bg-panel-soft">
                 <Tag tone="accent">{topic.noteCount} notes</Tag>
