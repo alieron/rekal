@@ -3,13 +3,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Rekal",
-  description: "Private topic-based resource collector.",
+  description: "Private topic-based note collector.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-page">{children}</body>
     </html>
   );
 }
