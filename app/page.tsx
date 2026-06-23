@@ -1,3 +1,4 @@
+import { ActivityRangeSelect } from "@/components/activity-range-select";
 import { AppShell } from "@/components/app-shell";
 import { NoteTable } from "@/components/note-table";
 import { Heatmap } from "@/components/ui/heatmap";
@@ -7,13 +8,20 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+const activityRanges = [
+  { label: "This year", value: "this-year" },
+  { label: "This month", value: "this-month" },
+  { label: "Past year", value: "past-year" },
+];
+
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
+  const { range } = await searchParams;
+  const selectedRange = activityRanges.find((option) => option.value == range) ?? activityRanges[0];
   const [allNotes, topics, topicStats, activityByDay] = await Promise.all([getNotesWithTopics(), getTopics(), getTopicsWithStats(), getActivityByDay()]);
   const recentNotes = allNotes.slice(0, 7);
   const activity = Array.from(activityByDay, ([date, count]) => ({ date, count }));
-  const end = new Date();
-  const start = new Date();
-  start.setDate(end.getDate() - 120);
+  const today = new Date();
+  const { start, end } = activityDateRange(selectedRange.value, today);
 
   return (
     <AppShell notes={allNotes} topics={topics}>
@@ -25,8 +33,17 @@ export default async function HomePage() {
         <section className="space-y-3">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-sm font-semibold text-text">Activity</h2>
+            <ActivityRangeSelect ranges={activityRanges} selectedValue={selectedRange.value} />
           </div>
-          <Heatmap endDate={end.toISOString().slice(0, 10)} startDate={start.toISOString().slice(0, 10)} values={activity} />
+          <Heatmap
+            colorMode="gradient"
+            endDate={dateKey(end)}
+            maxColor="#f59e0b"
+            minColor="#451a03"
+            numColors={4}
+            startDate={dateKey(start)}
+            values={activity}
+          />
         </section>
 
         <section className="space-y-3">
@@ -56,4 +73,29 @@ export default async function HomePage() {
       </div>
     </AppShell>
   );
+}
+
+function activityDateRange(range: string, today: Date) {
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const day = today.getDay();
+
+  switch (range) {
+    case "past-year": {
+      return { start: new Date(year - 1, month, day), end: today };
+    }
+    case "this-year":
+      return { start: new Date(year, 0, 1), end: today };
+    case "this-month":
+    default: {
+      return { start: new Date(year, month, 1), end: today };
+    }
+  }
+}
+
+function dateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
